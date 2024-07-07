@@ -17,12 +17,12 @@ window = display.set_mode((WIDTH,HEIGHT))
 FPS = 60
 clock = time.Clock()
 #задай фон сцени
-bg = image.load('Grass.png')
+bg = image.load('images\Grass.png')
 bg = transform.scale(bg,(MAP_WIDTH*TILESIZE, MAP_HEIGHT*TILESIZE))
-cyborg_img = image.load("ForestRanger.png")
-player_img = image.load("rect.png")
-wall_img = image.load("pine_tree.png")
-gold_img = image.load("pine_tree.png")
+cyborg_img = image.load("images\ForestRanger.png")
+player_img = image.load("images\rect.png")
+wall_img = image.load("images\pine_tree.png")
+gold_img = image.load("images\clipart1898966.png")
 all_sprites = sprite.Group()
 
 #створи 2 спрайти та розмісти їх на сцені
