@@ -10,19 +10,21 @@ game_win_text_over_text = font1.render("WIN", True,(0,255,0))
 #mixer.music.play()
 mixer_music.set_volume(0.03)
 #створи вікно гри;
-MAP_WIDTH, MAP_HEIGHT = 25,20
+MAP_WIDTH, MAP_HEIGHT = 25,21.5
 TILESIZE = 33
 WIDTH,HEIGHT =MAP_WIDTH*TILESIZE, MAP_HEIGHT*TILESIZE
 window = display.set_mode((WIDTH,HEIGHT))
 FPS = 60
 clock = time.Clock()
 #задай фон сцени
-bg = image.load('images\Grass.png')
+bg = image.load('images/Grass.png')
 bg = transform.scale(bg,(MAP_WIDTH*TILESIZE, MAP_HEIGHT*TILESIZE))
-cyborg_img = image.load("images\ForestRanger.png")
-player_img = image.load("images\rect.png")
-wall_img = image.load("images\pine_tree.png")
-gold_img = image.load("images\clipart1898966.png")
+cyborg_img = image.load("images/ForestRanger.png")
+player_img = image.load("images/rect.png")
+wall_img = image.load("images/pine_tree_png.png")
+gold_img = image.load("images/clipart1898966.png")
+fake_img = image.load("images/clipart1898966.png")
+exit_img = image.load("images/clipart1898966.png")
 all_sprites = sprite.Group()
 
 #створи 2 спрайти та розмісти їх на сцені
@@ -63,6 +65,9 @@ class Player(Sprite):
         enemy_collide = sprite.spritecollide(self,enemys,False,sprite.collide_mask)
         if len(enemy_collide) > 0:
             self.hp -= 100
+        fake_collide = sprite.spritecollide(self,fakes,False,sprite.collide_mask)
+        if len(fake_collide) > 0:
+            self.hp -= 100
         enemy_collide = sprite.spritecollide(self,poshalkikill,False,sprite.collide_mask)
         if len(enemy_collide) > 0:
             self.hp -= 100
@@ -98,50 +103,48 @@ class Enemy(Sprite):
             self.rect.x, self.rect.y = old_pos
         
 
-
 player = Player(player_img,50,50,300,300)
 walls = sprite.Group()
 enemys = sprite.Group()
-
+fakes = sprite.Group()
+exits = sprite.Group()
 poshalkas = sprite.Group()
 poshalkikill = sprite.Group()
 
-with open("map.txt", "r") as f:
-    map = f.readlines()
-    x = 0
-    y = 0
-    for line in map:
-        for symwol in line:
-            if symwol == "w":
-                walls.add(Sprite(wall_img, TILESIZE,TILESIZE,x,y))
-            if symwol == "t":
-                poshalko = Sprite(wall_img, TILESIZE,TILESIZE,x,y)
-                poshalkas.add(poshalko)
-            if symwol == "u":
-                poshalk = Sprite(wall_img, TILESIZE,TILESIZE,x,y)
-                poshalkas.add(poshalk)
-            if symwol == "n":
-                poshal = Sprite(wall_img, TILESIZE,TILESIZE,x,y)
-                poshalkas.add(poshal)
-            if symwol == "z":
-                posha = Sprite(wall_img, TILESIZE,TILESIZE,x,y)
-                poshalkas.add(posha)
-            if symwol == "q":
-                posh = Sprite(wall_img, TILESIZE,TILESIZE,x,y)
-                poshalkikill.add(posh)
-                poshalkas.add(posh)
-            
-            
-            if symwol == "p":
-                player.rect.x = x
-                player.rect.y = y
-            if symwol == "g":
-                gold = Sprite(gold_img, 70,70,x,y)
-            if symwol == "e":
-                enemys.add(Enemy(cyborg_img, TILESIZE,TILESIZE,x,y))
-            x += TILESIZE
-        y+=TILESIZE
+
+
+def load_map(map_file):
+
+    global gold,exits
+    for s in all_sprites:
+        if s != player:
+            s.kill()
+
+    with open(map_file) as f:
+        map = f.readlines()
         x = 0
+        y = 0
+        for line in map:
+            for symwol in line:
+                if symwol == "w":
+                    walls.add(Sprite(wall_img, TILESIZE,TILESIZE,x,y))
+                if symwol == "p":
+                    player.rect.x = x
+                    player.rect.y = y
+                if symwol == "g":
+                    gold = Sprite(gold_img, 40,40,x,y)
+                if symwol == "f":
+                    fakes.add(Sprite(fake_img, 40,40,x,y))
+                if symwol == "a":
+                    exits = (Sprite(exit_img, 40,40,x,y))
+                if symwol == "e":
+                    enemys.add(Enemy(cyborg_img, TILESIZE,TILESIZE,x,y))
+                x += TILESIZE
+            y+=TILESIZE
+            x = 0
+
+load_map("map1.txt")
+lvl = 1
 
 #оброби подію «клік за кнопкою "Закрити вікно"»
 run = True
@@ -156,12 +159,15 @@ while run:
     window.blit(bg, (0,0))
     if player.hp <= 0:
         finish = True
-    
-   
-
     if sprite.collide_mask(player,gold):
-        finish = True
-        game_over_text = font1.render("     WIN", True,(0,255,0))
+        lvl += 1
+        if lvl <= 4:
+            load_map(f"map{lvl}.txt")
+    if lvl==4:
+        if sprite.collide_mask(player,exits):
+            finish = True
+            game_over_text = font1.render("     WIN", True,(0,255,0))
+            
 
     all_sprites.draw(window)
     if not finish:
