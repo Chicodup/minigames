@@ -1,9 +1,9 @@
 wwwwwwwwwwwwwwwwwwwwwwwww
-w p          ww         w
+w p           ww        w
 w               w w  w  w
-wwww  wwwwwwww         ew 
+wwwr  wwwwwwww         ew 
 w                  w    w
-wwwwwwwww         ww    w        w
+wwwrrwwwww         ww    w        w
 w                 we    w
 w    w              w   w 
 w w     www    w        w
@@ -11,11 +11,11 @@ w        eeeeee     www w
 w  w                    w
 wwwww  www       ww wwwww            w
 w   w                   w
-w             wwww      w
+w             wrww      w
 w   w   ww              w
-w      w wwww           w
+w      w rrww           w
 w                       w
-w   w         www   wwwwww
+w   w         wrw   wwrwww
 w                  w  g w 
 w               we      w  
 wwwwwwwwwwwwwwwwwwwwwwwwww
