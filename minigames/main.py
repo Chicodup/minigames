@@ -47,7 +47,7 @@ class Player(Sprite):
         super().__init__(sprite_img,width,height,x,y)
         self.hp = 100
         self.buttons = 0
-        self.speed = 5
+        self.speed = 3.5
         self.left = self.image
         self.right = transform.flip(self.image,True, False)
     def update(self):
@@ -126,6 +126,10 @@ class Enemy(Sprite):
         if len(collide_list) > 0:
             self.dir = choice(self.dir_list)
             self.rect.x, self.rect.y = old_pos
+        collide_list = sprite.spritecollide(self,ruins,False,sprite.collide_mask)
+        if len(collide_list) > 0:
+            self.dir = choice(self.dir_list)
+            self.rect.x, self.rect.y = old_pos
 
         
 
@@ -160,7 +164,7 @@ def load_map(map_file):
                 if symwol == "w":
                     walls.add(Sprite(wall_img, TILESIZE,TILESIZE,x,y))
                 if symwol == "r":
-                    ruins.add(Sprite(ruins_img, TILESIZE,TILESIZE,x,y))
+                    ruins.add(Sprite(ruins_img, 30,30,x,y))
                 if symwol == "p":
                     player.rect.x = x
                     player.rect.y = y
@@ -169,7 +173,7 @@ def load_map(map_file):
                 if symwol == "f":
                     fakes.add(Sprite(fake_img, 40,40,x,y))
                 if symwol == "s":
-                    spikes.add(Sprite(spike_img, 27,27,x,y))
+                    spikes.add(Sprite(spike_img, 24,24,x,y))
                 if symwol == "b":
                     buttons.add(Sprite(button_img, 70,60,x,y))
                 if symwol == "a":
