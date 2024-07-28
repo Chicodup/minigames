@@ -1,8 +1,10 @@
 from random import choice
 from pygame import *
+import pygame_menu
 init()
 font.init()
 font1 = font.SysFont("Arial",100,True)
+font2 = font.SysFont("Arial",34,True)
 game_over_text = font1.render("Game Over", True,(255,0,0))
 game_win_text_over_text = font1.render("WIN", True,(0,255,0))
 #mixer.init()
@@ -47,7 +49,7 @@ class Player(Sprite):
         super().__init__(sprite_img,width,height,x,y)
         self.hp = 100
         self.buttons = 0
-        self.speed = 3.5
+        self.speed = 3.23
         self.left = self.image
         self.right = transform.flip(self.image,True, False)
     def update(self):
@@ -94,6 +96,7 @@ class Player(Sprite):
     
 
 class Enemy(Sprite):
+    standart_speed = 2.1
     def __init__(self,sprite_img,width,height,x,y):
         super().__init__(sprite_img,width,height,x,y)
         self.damage = 1
@@ -173,31 +176,94 @@ def load_map(map_file):
                 if symwol == "f":
                     fakes.add(Sprite(fake_img, 40,40,x,y))
                 if symwol == "s":
-                    spikes.add(Sprite(spike_img, 24,24,x,y))
+                    spikes.add(Sprite(spike_img, 26,26,x,y))
                 if symwol == "b":
                     buttons.add(Sprite(button_img, 70,60,x,y))
                 if symwol == "a":
                     exits.add(Sprite(exit_img, 40,40,x,y))
+                if symwol == "n":
+                    enemys.add(Enemy(wall_img, TILESIZE,TILESIZE,x,y))
+                if symwol == "l":
+                    enemys.add(Enemy(wall_img, 150,150,x,y))
+                if symwol == "u":
+                    walls.add(Sprite(cyborg_img, TILESIZE,TILESIZE,x,y))
                 if symwol == "e":
                     enemys.add(Enemy(cyborg_img, TILESIZE,TILESIZE,x,y))
                 x += TILESIZE
             y+=TILESIZE
             x = 0
+            
 
-load_map("map4.txt")
-lvl = 4
+load_map("map.txt")
+lvl = 0
 
 #оброби подію «клік за кнопкою "Закрити вікно"»
-run = True
+run = False
 finish = False
+def set_difficulty(selected, value):
+    """
+    Set the difficulty of the game.
+    """
+    print(f'Set difficulty to {selected[0]} ({value})')
+    player.speed = value
+    if player.speed == 5:
+        Enemy.standart_speed = 1
+    if player.speed == 3.5:
+        Enemy.standart_speed = 2.1
+    if player.speed == 2:
+        Enemy.standart_speed = 10
+
+    for enemy in enemys:
+        enemy.speed = Enemy.standart_speed
+
+def start_the_game():
+    # Do the job here !
+    global run
+    run = True
+    menu.disable()
+
+#завантажуємо картинку
+myimage = pygame_menu.baseimage.BaseImage(
+    image_path='images/Grass.png',
+    drawing_mode=pygame_menu.baseimage.IMAGE_MODE_REPEAT_XY,
+)
+#створюємо власну тему - копію стандартної
+mytheme = pygame_menu.themes.THEME_DARK.copy()
+# колір верхньої панелі (останній параметр - 0 робить її прозорою)
+mytheme.title_background_color=(255, 255, 255, 0) 
+#задаємо картинку для фону
+mytheme.background_color = myimage
+menu = pygame_menu.Menu('mini', WIDTH, HEIGHT,
+                       theme=mytheme)   
+
+#user_name = menu.add.text_input("Ім'я :", default='Анонім')
+menu.add.selector('Складність :', [('Hard',2), ('Normal', 3.5),('Easy', 5)], onchange=set_difficulty)
+menu.add.button('Play', start_the_game)
+menu.add.button('Quit', pygame_menu.events.EXIT)
+menu.mainloop(window)
+
+timer_text = font2.render(f"Time: 0",True,(255,255,255))
+current_time = 0
+total_time = 300
+start_time = time.get_ticks()
 while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
             if player.hp <= 0:
                 run = False
+        if e.type == KEYDOWN:
+            if e.key == K_ESCAPE:
+                menu.enable()
+                menu.mainloop(window)
+
     
     window.blit(bg, (0,0))
+    
+    if current_time >= total_time:
+        finish = True
+
+
     if player.hp <= 0:
         finish = True
     
@@ -214,7 +280,11 @@ while run:
                 load_map(f"map{lvl}.txt")
 
     all_sprites.draw(window)
+    window.blit(timer_text ,(10,10))
     if not finish:
+        now = time.get_ticks()
+        current_time = int((now - start_time)/1000)
+        timer_text = font2.render(f"Time: {total_time - current_time}",True,(255,255,255))
         all_sprites.update()
     if finish:
         window.blit(game_over_text,(230,270))

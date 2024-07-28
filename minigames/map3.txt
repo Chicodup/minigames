@@ -6,16 +6,16 @@ wsssssssssrrssssssssss sw                       w
 w       w               w w
 w     r e       rrr     w  w
 r  w                    s  w w 
-wsssssssssssssssssssss  r                  s  w w
+wseessssssssssssssssss  r                  s  w w
 ws                 s    r       w
 ws  r r              sssrsw                    sssw  w
 ws ssssssssssssss    sssw   w               w
 ws         w      s     w w                  w
 rssss         w      ssssss w     r
 w   s      w          ssw
-w s                  s  w
-wss ssssssssss sssssssssw         w
-r   s           s   s   r    w
-w   ssssss sssss  s  g  w
-w s                     w  
+w s      eee         sssw
+wss ss sssssssss sssssssw         w
+r        s  eeee  s   s r    w
+w   ssssss ssssssss  g  w
+ws                   s  w  
 wwwwrrwwwwwwwwwwwwwwwwwwww
