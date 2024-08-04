@@ -194,8 +194,8 @@ def load_map(map_file):
             x = 0
             
 
-load_map("map.txt")
-lvl = 0
+load_map("map4.txt")
+lvl = 4
 
 #оброби подію «клік за кнопкою "Закрити вікно"»
 run = False
@@ -272,7 +272,7 @@ while run:
         if len(collide_list) > 0:
             if len(buttons) == 0:
                 finish = True
-                game_over_text = font1.render("     WIN", True,(0,255,0))
+                game_over_text = font1.render("  Перемога!", True,(0,255,0))
     else:
         if sprite.collide_mask(player,gold):
             lvl += 1
